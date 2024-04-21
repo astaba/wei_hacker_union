@@ -6,15 +6,17 @@ type ItemProps = {
   story: Story;
 };
 
-const Item: React.FC<ItemProps> = (props) => {
+const Item: React.FC<ItemProps> = ({
+  story: { url, title, author, num_comments, points },
+}) => {
   return (
-    <li key={props.story.objectID}>
+    <li>
       <span>
-        <a href={props.story.url}>{props.story.title}</a>
+        <a href={url}>{title}</a>
       </span>
-      <span>{props.story.author}</span>
-      <span>{props.story.num_comments}</span>
-      <span>{props.story.points}</span>
+      <span>{author}</span>
+      <span>{num_comments}</span>
+      <span>{points}</span>
     </li>
   );
 };

@@ -1,14 +1,12 @@
-import React from "react"
-
 const title = "React";
 
 function App() {
   return (
-    React.createElement(
-      "div",
-      null,
-      React.createElement("h1", null, `Hello ${title}!`)
-    )
+    <div>
+      <h1>Hello {title}!</h1>
+      <label htmlFor="search">Search: </label>&nbsp;
+      <input id="search" type="text" />
+    </div>
   );
 }
 

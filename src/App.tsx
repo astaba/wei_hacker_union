@@ -1,10 +1,14 @@
+import React from "react"
+
 const title = "React";
 
 function App() {
   return (
-    <div>
-      <h1>Hello {title}!</h1>
-    </div>
+    React.createElement(
+      "div",
+      null,
+      React.createElement("h1", null, `Hello ${title}!`)
+    )
   );
 }
 

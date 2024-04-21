@@ -5,10 +5,10 @@ type ListProps = {
   stories: Story[];
 };
 
-const List: React.FC<ListProps> = ({ stories }) => {
+const List: React.FC<ListProps> = (props) => {
   return (
     <ul>
-      {stories.map((story) => (
+      {props.stories.map((story) => (
         <Item key={story.objectID} story={story} />
       ))}
     </ul>

@@ -1,12 +1,13 @@
 type SearchProps = {
+  searchTerm: string;
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Search: React.FC<SearchProps> = ({ onSearch }) => {
+const Search: React.FC<SearchProps> = ({ onSearch, searchTerm }) => {
   return (
     <div>
       <label htmlFor="search">Search: </label>&nbsp;
-      <input id="search" type="text" onChange={onSearch} />
+      <input id="search" type="text" value={searchTerm} onChange={onSearch} />
     </div>
   );
 };

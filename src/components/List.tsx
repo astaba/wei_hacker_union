@@ -8,8 +8,8 @@ type ListProps = {
 const List: React.FC<ListProps> = (props) => {
   return (
     <ul>
-      {props.stories.map((story) => (
-        <Item key={story.objectID} story={story} />
+      {props.stories.map(({ objectID, ...item }) => (
+        <Item key={objectID} story={{ objectID, ...item }} />
       ))}
     </ul>
   );

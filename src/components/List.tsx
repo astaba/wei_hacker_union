@@ -1,17 +1,15 @@
-import { list } from "../constants/mock_data.ts";
+import Item from "./Item.tsx";
+import { Story } from "../types/constants.ts";
 
-const List = () => {
+type ListProps = {
+  stories: Story[];
+};
+
+const List: React.FC<ListProps> = ({ stories }) => {
   return (
     <ul>
-      {list.map((item) => (
-        <li key={item.objectID}>
-          <span>
-            <a href={item.url}>{item.title}</a>
-          </span>
-          <span>{item.author}</span>
-          <span>{item.num_comments}</span>
-          <span>{item.points}</span>
-        </li>
+      {stories.map((story) => (
+        <Item key={story.objectID} story={story} />
       ))}
     </ul>
   );

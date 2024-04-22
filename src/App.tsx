@@ -53,12 +53,13 @@ function App() {
     const fetchStories = () => {
       setIsError("");
       setIsLoading(true);
-      getMockAsyncData(true)
+      getMockAsyncData(false)
         .then((response) => {
           dispatchStories({
             type: SET_STORIES,
             payload: response.data.stories,
           });
+          // Impossible state cause.
           setIsLoading(false);
         })
         .catch((error) => {

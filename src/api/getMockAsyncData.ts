@@ -9,6 +9,6 @@ export const getMockAsyncData = (
       setTimeout(() => resolve({ data: { stories: initialList } }), 2000);
       return;
     }
-    setTimeout(() => reject(new Error("Rejected promise.")), 2000);
+    setTimeout(() => reject(new Error("Mock data not found!")), 2000);
   });
 };

@@ -1,5 +1,5 @@
+import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
-import Search from "./components/Search.tsx";
 import { list } from "./constants/mock_data.ts";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 
@@ -10,15 +10,23 @@ function App() {
     setSearchTerm(event.target.value);
   };
 
-  const searchedStories = stories.filter(((searchTerm: string) => (story) =>
-      !searchTerm || story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const searchedStories = stories.filter(
+    (
+      (searchTerm: string) => (story) =>
+        !searchTerm ||
+        story.title.toLowerCase().includes(searchTerm.toLowerCase())
     )(searchTerm),
   );
 
   return (
     <div>
       <h1>My hacker stories</h1>
-      <Search onSearch={handleSearch} searchTerm={searchTerm} />
+      <InputWithLabel
+        id="search"
+        value={searchTerm}
+        label="Search"
+        onChange={handleSearch}
+      />
       <hr />
       <List stories={searchedStories} />
     </div>

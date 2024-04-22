@@ -59,11 +59,12 @@ function App() {
             type: SET_STORIES,
             payload: response.data.stories,
           });
-          // Impossible state cause.
-          setIsLoading(false);
         })
         .catch((error) => {
           setIsError(error?.message || "Something went wrong!");
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
     fetchStories();

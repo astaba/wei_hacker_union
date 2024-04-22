@@ -9,6 +9,9 @@ import { getMockAsyncData } from "./api/getMockAsyncData.ts";
 function App() {
   const [stories, setStories] = useState<Story[]>([]);
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
+  const [isError, setIsError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -30,9 +33,16 @@ function App() {
 
   useEffect(() => {
     const fetchStories = () => {
-      getMockAsyncData(true).then((response) =>
-        setStories(response.data.stories),
-      );
+      setIsError("");
+      setIsLoading(true);
+      getMockAsyncData(true)
+        .then((response) => {
+          setStories(response.data.stories);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setIsError(error?.message || "Something went wrong!");
+        });
     };
     fetchStories();
   }, []);
@@ -49,7 +59,12 @@ function App() {
         <strong>Search: </strong>
       </InputWithLabel>
       <hr />
-      <List stories={searchedStories} onRemove={handleRemoveStory} />
+      {isError && <h3>{isError}</h3>}
+      {isLoading ? (
+        <h3>Loading ...</h3>
+      ) : (
+        <List stories={searchedStories} onRemove={handleRemoveStory} />
+      )}
     </div>
   );
 }

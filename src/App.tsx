@@ -4,7 +4,6 @@ import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
-import { getMockAsyncData } from "./api/getMockAsyncData.ts";
 
 const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
 const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
@@ -38,6 +37,8 @@ const storiesReducer = (
   }
 };
 
+const END_POINT = "https://hn.algolia.com/api/v1/search?query=";
+
 function App() {
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
     stories: [],
@@ -65,11 +66,12 @@ function App() {
   useEffect(() => {
     const fetchStories = () => {
       dispatchCoStates({ type: STORIES_FETCH_INIT });
-      getMockAsyncData(true)
-        .then((response) => {
+      fetch(`${END_POINT}React`)
+        .then((response) => response.json())
+        .then((data) => {
           dispatchCoStates({
             type: STORIES_FETCH_SUCCESS,
-            payload: response.data.stories,
+            payload: data.hits,
           });
         })
         .catch((error) => {

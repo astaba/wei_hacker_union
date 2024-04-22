@@ -4,20 +4,20 @@ type InputWithLaebelProps = {
   id: string;
   type?: string;
   value: string;
-  label: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  children: React.ReactNode;
 };
 
 const InputWithLabel: React.FC<InputWithLaebelProps> = ({
   id,
   type = "text",
   value,
-  label,
   onChange,
+  children,
 }) => {
   return (
     <>
-      <label htmlFor={id}>{label}: </label>&nbsp;
+      <label htmlFor={id}>{children}</label>&nbsp;
       <input id={id} type={type} value={value} onChange={onChange} />
     </>
   );

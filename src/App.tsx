@@ -21,12 +21,9 @@ function App() {
   return (
     <div>
       <h1>My hacker stories</h1>
-      <InputWithLabel
-        id="search"
-        value={searchTerm}
-        label="Search"
-        onChange={handleSearch}
-      />
+      <InputWithLabel id="search" value={searchTerm} onChange={handleSearch}>
+        <strong>Search: </strong>
+      </InputWithLabel>
       <hr />
       <List stories={searchedStories} />
     </div>

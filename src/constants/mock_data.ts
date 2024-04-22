@@ -1,4 +1,4 @@
-export const list = [
+export const initialList = [
   {
     title: "React",
     url: "http://reactjs.org/",

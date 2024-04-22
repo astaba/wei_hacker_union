@@ -1,13 +1,23 @@
+import { useState } from "react";
+
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
-import { list } from "./constants/mock_data.ts";
+import { initialList } from "./constants/mock_data.ts";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
+import { Story } from "./types/constants.ts";
 
 function App() {
-  const stories = list;
+  const [stories, setStories] = useState<Story[]>(initialList);
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleRemoveStory = (item: Story) => {
+    const newStories = stories.filter(
+      (story) => story.objectID !== item.objectID,
+    );
+    setStories(newStories);
   };
 
   const searchedStories = stories.filter(
@@ -30,7 +40,7 @@ function App() {
         <strong>Search: </strong>
       </InputWithLabel>
       <hr />
-      <List stories={searchedStories} />
+      <List stories={searchedStories} onRemove={handleRemoveStory} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 type InputWithLaebelProps = {
   id: string;
@@ -6,7 +6,6 @@ type InputWithLaebelProps = {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   children: React.ReactNode;
-  isFocused?: boolean;
 };
 
 const InputWithLabel: React.FC<InputWithLaebelProps> = ({
@@ -15,8 +14,12 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
   value,
   onChange,
   children,
-  isFocused,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    inputRef.current && inputRef.current.focus();
+  }, []);
+
   return (
     <>
       <label htmlFor={id}>{children}</label>&nbsp;
@@ -25,7 +28,7 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
         type={type}
         value={value}
         onChange={onChange}
-        autoFocus={isFocused}
+        ref={inputRef}
       />
     </>
   );

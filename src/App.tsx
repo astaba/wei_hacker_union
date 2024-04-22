@@ -25,7 +25,6 @@ function App() {
         id="search_1"
         value={searchTerm}
         onChange={handleSearch}
-        // isFocused
       >
         <strong>Search_1: </strong>
       </InputWithLabel>
@@ -34,7 +33,6 @@ function App() {
         id="search_2"
         value={searchTerm}
         onChange={handleSearch}
-        isFocused
       >
         <strong>Search_2: </strong>
       </InputWithLabel>
@@ -43,7 +41,6 @@ function App() {
         id="search_3"
         value={searchTerm}
         onChange={handleSearch}
-        // isFocused
       >
         <strong>Search_3: </strong>
       </InputWithLabel>

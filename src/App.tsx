@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
-
 import List from "./components/List.tsx";
 import Search from "./components/Search.tsx";
 import { list } from "./constants/mock_data.ts";
+import useLocalStorage from "./hooks/useLocalStorage.tsx";
 
 function App() {
   const stories = list;
-  const [searchTerm, setSearchTerm] = useState(
-    localStorage.getItem("search") || "React",
-  );
+  const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -16,10 +13,6 @@ function App() {
   const searchedStories = stories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  useEffect(() => {
-    localStorage.setItem("search", searchTerm);
-  }, [searchTerm]);
 
   return (
     <div>

@@ -55,18 +55,11 @@ function App() {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
   };
 
-  const searchedStories = coStates.stories.filter(
-    (
-      (searchTerm: string) => (story) =>
-        !searchTerm ||
-        story.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )(searchTerm),
-  );
-
   useEffect(() => {
+    if (!searchTerm) return;
     const fetchStories = () => {
       dispatchCoStates({ type: STORIES_FETCH_INIT });
-      fetch(`${END_POINT}React`)
+      fetch(`${END_POINT}${searchTerm}`)
         .then((response) => response.json())
         .then((data) => {
           dispatchCoStates({
@@ -82,7 +75,7 @@ function App() {
         });
     };
     fetchStories();
-  }, []);
+  }, [searchTerm]);
 
   return (
     <div>
@@ -100,7 +93,7 @@ function App() {
       {coStates.isLoading ? (
         <h3>Loading ...</h3>
       ) : (
-        <List stories={searchedStories} onRemove={handleRemoveStory} />
+        <List stories={coStates.stories} onRemove={handleRemoveStory} />
       )}
     </div>
   );

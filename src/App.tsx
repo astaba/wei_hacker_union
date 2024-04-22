@@ -1,5 +1,3 @@
-import React, { useEffect, useRef } from "react";
-
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
 import { list } from "./constants/mock_data.ts";
@@ -19,10 +17,6 @@ function App() {
         story.title.toLowerCase().includes(searchTerm.toLowerCase())
     )(searchTerm),
   );
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    inputRef.current && inputRef.current.focus();
-  }, []);
 
   return (
     <div>
@@ -31,7 +25,7 @@ function App() {
         id="search_1"
         value={searchTerm}
         onChange={handleSearch}
-        ref={inputRef}
+        isFocused
       >
         <strong>Search_1: </strong>
       </InputWithLabel>
@@ -40,7 +34,7 @@ function App() {
         id="search_2"
         value={searchTerm}
         onChange={handleSearch}
-        // ref={inputRef}
+        // isFocused
       >
         <strong>Search_2: </strong>
       </InputWithLabel>
@@ -49,7 +43,7 @@ function App() {
         id="search_3"
         value={searchTerm}
         onChange={handleSearch}
-        // ref={inputRef}
+        // isFocused
       >
         <strong>Search_3: </strong>
       </InputWithLabel>

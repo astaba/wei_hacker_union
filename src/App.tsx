@@ -21,15 +21,30 @@ function App() {
   return (
     <div>
       <h1>My hacker stories</h1>
-      <InputWithLabel id="search_1" value={searchTerm} onChange={handleSearch}>
+      <InputWithLabel
+        id="search_1"
+        value={searchTerm}
+        onChange={handleSearch}
+        // isFocused
+      >
         <strong>Search_1: </strong>
       </InputWithLabel>
       <hr />
-      <InputWithLabel id="search_2" value={searchTerm} onChange={handleSearch}>
+      <InputWithLabel
+        id="search_2"
+        value={searchTerm}
+        onChange={handleSearch}
+        isFocused
+      >
         <strong>Search_2: </strong>
       </InputWithLabel>
       <hr />
-      <InputWithLabel id="search_3" value={searchTerm} onChange={handleSearch}>
+      <InputWithLabel
+        id="search_3"
+        value={searchTerm}
+        onChange={handleSearch}
+        // isFocused
+      >
         <strong>Search_3: </strong>
       </InputWithLabel>
       <hr />

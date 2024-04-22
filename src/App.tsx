@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
@@ -6,8 +6,29 @@ import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import { getMockAsyncData } from "./api/getMockAsyncData.ts";
 
+const SET_STORIES = "SET_STORIES";
+const REMOVE_STORY = "REMOVE_STORY";
+
+const storiesReducer = (
+  state: Story[],
+  action:
+    | { type: typeof SET_STORIES; payload: Story[] }
+    | { type: typeof REMOVE_STORY; payload: Story },
+) => {
+  switch (action.type) {
+    case SET_STORIES:
+      return action.payload;
+    case REMOVE_STORY:
+      return state.filter(
+        (story) => story.objectID !== action.payload.objectID,
+      );
+    default:
+      throw new Error("Unexpected case in reducer action type");
+  }
+};
+
 function App() {
-  const [stories, setStories] = useState<Story[]>([]);
+  const [stories, dispatchStories] = useReducer(storiesReducer, []);
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
   const [isError, setIsError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,10 +38,7 @@ function App() {
   };
 
   const handleRemoveStory = (item: Story) => {
-    const newStories = stories.filter(
-      (story) => story.objectID !== item.objectID,
-    );
-    setStories(newStories);
+    dispatchStories({ type: REMOVE_STORY, payload: item });
   };
 
   const searchedStories = stories.filter(
@@ -37,7 +55,10 @@ function App() {
       setIsLoading(true);
       getMockAsyncData(true)
         .then((response) => {
-          setStories(response.data.stories);
+          dispatchStories({
+            type: SET_STORIES,
+            payload: response.data.stories,
+          });
           setIsLoading(false);
         })
         .catch((error) => {

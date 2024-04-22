@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
-import { initialList } from "./constants/mock_data.ts";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
+import { getMockAsyncData } from "./api/getMockAsyncData.ts";
 
 function App() {
-  const [stories, setStories] = useState<Story[]>(initialList);
+  const [stories, setStories] = useState<Story[]>([]);
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -27,6 +27,15 @@ function App() {
         story.title.toLowerCase().includes(searchTerm.toLowerCase())
     )(searchTerm),
   );
+
+  useEffect(() => {
+    const fetchStories = () => {
+      getMockAsyncData(true).then((response) =>
+        setStories(response.data.stories),
+      );
+    };
+    fetchStories();
+  }, []);
 
   return (
     <div>

@@ -18,7 +18,7 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
   return (
     <>
       <label htmlFor={id}>{children}</label>&nbsp;
-      <input id={id} type={type} value={value} onChange={onChange} />
+      <input id={id} type={type} value={value} onChange={onChange} autoFocus />
     </>
   );
 };

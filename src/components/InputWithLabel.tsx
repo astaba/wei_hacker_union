@@ -1,37 +1,28 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
-type InputWithLaebelProps = {
+interface InputWithLaebelProps {
   id: string;
   type?: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   children: React.ReactNode;
-};
+}
 
-const InputWithLabel: React.FC<InputWithLaebelProps> = ({
-  id,
-  type = "text",
-  value,
-  onChange,
-  children,
-}) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    inputRef.current && inputRef.current.focus();
-  }, []);
-
-  return (
-    <>
-      <label htmlFor={id}>{children}</label>&nbsp;
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={onChange}
-        ref={inputRef}
-      />
-    </>
-  );
-};
+const InputWithLabel = React.forwardRef<HTMLInputElement, InputWithLaebelProps>(
+  ({ id, type = "text", value, onChange, children }, ref) => {
+    return (
+      <>
+        <label htmlFor={id}>{children}</label>&nbsp;
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          ref={ref}
+        />
+      </>
+    );
+  },
+);
 
 export default InputWithLabel;

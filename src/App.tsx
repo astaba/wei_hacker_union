@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
@@ -6,42 +6,55 @@ import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import { getMockAsyncData } from "./api/getMockAsyncData.ts";
 
-const SET_STORIES = "SET_STORIES";
+const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
+const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
+const STORIES_FETCH_FAILURE = "STORIES_FETCH_FAILURE";
 const REMOVE_STORY = "REMOVE_STORY";
 
 const storiesReducer = (
-  state: Story[],
+  state: { stories: Story[]; isLoading: boolean; isError: string | boolean },
   action:
-    | { type: typeof SET_STORIES; payload: Story[] }
+    | { type: typeof STORIES_FETCH_INIT }
+    | { type: typeof STORIES_FETCH_FAILURE; payload: string }
+    | { type: typeof STORIES_FETCH_SUCCESS; payload: Story[] }
     | { type: typeof REMOVE_STORY; payload: Story },
 ) => {
   switch (action.type) {
-    case SET_STORIES:
-      return action.payload;
+    case STORIES_FETCH_INIT:
+      return { ...state, isLoading: true, isError: "" };
+    case STORIES_FETCH_FAILURE:
+      return { ...state, isLoading: false, isError: action.payload };
+    case STORIES_FETCH_SUCCESS:
+      return { stories: action.payload, isLoading: false, isError: "" };
     case REMOVE_STORY:
-      return state.filter(
-        (story) => story.objectID !== action.payload.objectID,
-      );
+      return {
+        ...state,
+        stories: state.stories.filter(
+          (story) => story.objectID !== action.payload.objectID,
+        ),
+      };
     default:
       throw new Error("Unexpected case in reducer action type");
   }
 };
 
 function App() {
-  const [stories, dispatchStories] = useReducer(storiesReducer, []);
+  const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
+    stories: [],
+    isLoading: false,
+    isError: "",
+  });
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
-  const [isError, setIsError] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
   const handleRemoveStory = (item: Story) => {
-    dispatchStories({ type: REMOVE_STORY, payload: item });
+    dispatchCoStates({ type: REMOVE_STORY, payload: item });
   };
 
-  const searchedStories = stories.filter(
+  const searchedStories = coStates.stories.filter(
     (
       (searchTerm: string) => (story) =>
         !searchTerm ||
@@ -51,20 +64,19 @@ function App() {
 
   useEffect(() => {
     const fetchStories = () => {
-      setIsError("");
-      setIsLoading(true);
-      getMockAsyncData(false)
+      dispatchCoStates({ type: STORIES_FETCH_INIT });
+      getMockAsyncData(true)
         .then((response) => {
-          dispatchStories({
-            type: SET_STORIES,
+          dispatchCoStates({
+            type: STORIES_FETCH_SUCCESS,
             payload: response.data.stories,
           });
         })
         .catch((error) => {
-          setIsError(error?.message || "Something went wrong!");
-        })
-        .finally(() => {
-          setIsLoading(false);
+          dispatchCoStates({
+            type: STORIES_FETCH_FAILURE,
+            payload: error?.message || "Something went wrong!",
+          });
         });
     };
     fetchStories();
@@ -82,8 +94,8 @@ function App() {
         <strong>Search: </strong>
       </InputWithLabel>
       <hr />
-      {isError && <h3>{isError}</h3>}
-      {isLoading ? (
+      {coStates.isError && <h3>{coStates.isError}</h3>}
+      {coStates.isLoading ? (
         <h3>Loading ...</h3>
       ) : (
         <List stories={searchedStories} onRemove={handleRemoveStory} />

@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
@@ -55,7 +55,7 @@ function App() {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
   };
 
-  useEffect(() => {
+  const handleFetchStories = useCallback(() => {
     if (!searchTerm) return;
     const fetchStories = () => {
       dispatchCoStates({ type: STORIES_FETCH_INIT });
@@ -76,6 +76,10 @@ function App() {
     };
     fetchStories();
   }, [searchTerm]);
+
+  useEffect(() => {
+    handleFetchStories();
+  }, [handleFetchStories]);
 
   return (
     <div>

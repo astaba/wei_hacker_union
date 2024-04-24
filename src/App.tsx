@@ -61,28 +61,23 @@ function App() {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
   };
 
-  const handleFetchStories = useCallback(() => {
+  const handleFetchStories = useCallback(async () => {
     // Now the "disabled" attribute of the search button play this role
     // if (!url) return;
-    const fetchStories = () => {
-      dispatchCoStates({ type: STORIES_FETCH_INIT });
-      axios
-        .get(url)
-        .then((result) => {
-          console.log(result);
-          dispatchCoStates({
-            type: STORIES_FETCH_SUCCESS,
-            payload: result.data.hits,
-          });
-        })
-        .catch((error) => {
-          dispatchCoStates({
-            type: STORIES_FETCH_FAILURE,
-            payload: error?.message || "Something went wrong!",
-          });
-        });
-    };
-    fetchStories();
+    dispatchCoStates({ type: STORIES_FETCH_INIT });
+    try {
+      const result = await axios.get(url);
+      dispatchCoStates({
+        type: STORIES_FETCH_SUCCESS,
+        payload: result.data.hits,
+      });
+    } catch (error) {
+      console.log(error);
+      dispatchCoStates({
+        type: STORIES_FETCH_FAILURE,
+        payload: "Something went wrong while fetching stories!",
+      });
+    }
   }, [url]);
 
   useEffect(() => {

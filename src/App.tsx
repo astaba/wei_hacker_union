@@ -41,6 +41,7 @@ const storiesReducer = (
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 function App() {
+  console.log("B: App");
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
     stories: [],
     isLoading: false,
@@ -57,9 +58,9 @@ function App() {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
   };
 
-  const handleRemoveStory = (item: Story) => {
+  const handleRemoveStory = useCallback((item: Story) => {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
-  };
+  }, []);
 
   const handleFetchStories = useCallback(async () => {
     // Now the "disabled" attribute of the search button play this role

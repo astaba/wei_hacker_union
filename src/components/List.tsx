@@ -1,3 +1,5 @@
+import React from "react";
+
 import Item from "./Item.tsx";
 import { Story } from "../types/constants.ts";
 
@@ -6,7 +8,9 @@ type ListProps = {
   onRemove: (item: Story) => void;
 };
 
-const List: React.FC<ListProps> = (props) => {
+// React.memo API memoizes incoming props.
+const List: React.FC<ListProps> = React.memo((props) => {
+  console.log("B: List");
   return (
     <ul>
       {props.stories.map(({ objectID, ...item }) => (
@@ -18,6 +22,6 @@ const List: React.FC<ListProps> = (props) => {
       ))}
     </ul>
   );
-};
+});
 
 export default List;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
@@ -37,7 +37,7 @@ const storiesReducer = (
   }
 };
 
-const END_POINT = "https://hn.algolia.com/api/v1/search?query=";
+const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 function App() {
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
@@ -46,9 +46,14 @@ function App() {
     isError: "",
   });
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
+  const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value.trim());
+  };
+
+  const handleSearchSubmit = () => {
+    setUrl(`${API_ENDPOINT}${searchTerm}`);
   };
 
   const handleRemoveStory = (item: Story) => {
@@ -56,10 +61,11 @@ function App() {
   };
 
   const handleFetchStories = useCallback(() => {
-    if (!searchTerm) return;
+    // Now the "disabled" attribute of the search button play this role
+    // if (!url) return;
     const fetchStories = () => {
       dispatchCoStates({ type: STORIES_FETCH_INIT });
-      fetch(`${END_POINT}${searchTerm}`)
+      fetch(url)
         .then((response) => response.json())
         .then((data) => {
           dispatchCoStates({
@@ -75,7 +81,7 @@ function App() {
         });
     };
     fetchStories();
-  }, [searchTerm]);
+  }, [url]);
 
   useEffect(() => {
     handleFetchStories();
@@ -87,11 +93,14 @@ function App() {
       <InputWithLabel
         id="search"
         value={searchTerm}
-        onChange={handleSearch}
+        onChange={handleSearchChange}
         isFocused
       >
         <strong>Search: </strong>
       </InputWithLabel>
+      <button type="button" disabled={!searchTerm} onClick={handleSearchSubmit}>
+        Submit
+      </button>
       <hr />
       {coStates.isError && <h3>{coStates.isError}</h3>}
       {coStates.isLoading ? (

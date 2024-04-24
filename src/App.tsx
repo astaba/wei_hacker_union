@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import axios from "axios";
 
-import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
+import SearchForm from "./components/SearchForm.tsx";
 
 const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
 const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
@@ -87,17 +87,11 @@ function App() {
   return (
     <div>
       <h1>My hacker stories</h1>
-      <InputWithLabel
-        id="search"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        isFocused
-      >
-        <strong>Search: </strong>
-      </InputWithLabel>
-      <button type="button" disabled={!searchTerm} onClick={handleSearchSubmit}>
-        Submit
-      </button>
+      <SearchForm
+        onSearchSubmit={handleSearchSubmit}
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
+      />
       <hr />
       {coStates.isError && <h3>{coStates.isError}</h3>}
       {coStates.isLoading ? (

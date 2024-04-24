@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
+import axios from "axios";
 
 import InputWithLabel from "./components/InputWithLabel.tsx";
 import List from "./components/List.tsx";
@@ -65,12 +66,13 @@ function App() {
     // if (!url) return;
     const fetchStories = () => {
       dispatchCoStates({ type: STORIES_FETCH_INIT });
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
+      axios
+        .get(url)
+        .then((result) => {
+          console.log(result);
           dispatchCoStates({
             type: STORIES_FETCH_SUCCESS,
-            payload: data.hits,
+            payload: result.data.hits,
           });
         })
         .catch((error) => {

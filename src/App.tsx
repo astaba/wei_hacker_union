@@ -64,13 +64,16 @@ function App() {
     return getCommentSum(coStates.stories);
   }, [coStates]);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value.trim());
-  };
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(event.target.value.trim());
+    },
+    [setSearchTerm],
+  );
 
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = useCallback(() => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
-  };
+  }, [searchTerm]);
 
   const handleDismissStory = useCallback((item: Story) => {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });

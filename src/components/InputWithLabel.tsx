@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
-type InputWithLaebelProps = {
+type InputWithLabelProps = {
   id: string;
   type?: string;
   value: string;
@@ -9,31 +9,34 @@ type InputWithLaebelProps = {
   isFocused?: boolean;
 };
 
-const InputWithLabel: React.FC<InputWithLaebelProps> = ({
-  id,
-  type = "text",
-  value,
-  onSearchChange,
-  children,
-  isFocused,
-}) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (isFocused && inputRef.current) inputRef.current.focus();
-  }, [isFocused]);
+class InputWithLabel extends React.Component<InputWithLabelProps> {
+  constructor(props: InputWithLabelProps) {
+    super(props);
+  }
 
-  return (
-    <>
-      <label htmlFor={id}>{children}</label>&nbsp;
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={onSearchChange}
-        ref={inputRef}
-      />
-    </>
-  );
-};
+  private inputRef = React.createRef<HTMLInputElement>();
+
+  componentDidMount() {
+    if (this.props.isFocused && this.inputRef.current) {
+      this.inputRef.current.focus();
+    }
+  }
+
+  render() {
+    const { children, id, onSearchChange, value, type } = this.props;
+    return (
+      <>
+        <label htmlFor={id}>{children}</label>&nbsp;
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onSearchChange}
+          ref={this.inputRef}
+        />
+      </>
+    );
+  }
+}
 
 export default InputWithLabel;

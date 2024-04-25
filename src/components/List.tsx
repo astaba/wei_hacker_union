@@ -8,18 +8,25 @@ type ListProps = {
   onDismissStory: (item: Story) => void;
 };
 
-const List: React.FC<ListProps> = ({ stories, onDismissStory }) => {
-  return (
-    <ul>
-      {stories.map((story) => (
-        <Item
-          key={story.objectID}
-          story={story}
-          onDismissStory={onDismissStory}
-        />
-      ))}
-    </ul>
-  );
-};
+class List extends React.Component<ListProps> {
+  constructor(props: ListProps) {
+    super(props);
+  }
+
+  render() {
+    const { stories, onDismissStory } = this.props;
+    return (
+      <ul>
+        {stories.map((story) => (
+          <Item
+            key={story.objectID}
+            story={story}
+            onDismissStory={onDismissStory}
+          />
+        ))}
+      </ul>
+    );
+  }
+}
 
 export default List;

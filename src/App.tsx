@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import axios from "axios";
 
 import List from "./components/List.tsx";
@@ -40,6 +40,16 @@ const storiesReducer = (
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
+const getCommentSum = (stories: Story[]): number => {
+  console.log("C: get comment sum");
+  // Delayer
+  let i = 0;
+  while (i < 1000000000) i++;
+  // function purpose
+  const sum = stories.reduce((cumul, story) => cumul + story.num_comments, 0);
+  return sum;
+};
+
 function App() {
   console.log("B: App");
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
@@ -49,6 +59,10 @@ function App() {
   });
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
   const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
+  // Optimization in place of: const commentSum = getCommentSum(coStates.stories)
+  const commentSum = useMemo(() => {
+    return getCommentSum(coStates.stories);
+  }, [coStates]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value.trim());
@@ -87,7 +101,9 @@ function App() {
 
   return (
     <div>
-      <h1>My hacker stories</h1>
+      <h1>
+        My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
+      </h1>
       <SearchForm
         onSearchSubmit={handleSearchSubmit}
         searchTerm={searchTerm}

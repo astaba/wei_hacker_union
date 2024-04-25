@@ -41,17 +41,17 @@ const storiesReducer = (
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 const getCommentSum = (stories: Story[]): number => {
-  console.log("C: get comment sum");
+  // console.log("C: get comment sum");
   // Delayer
-  let i = 0;
-  while (i < 1000000000) i++;
+  // let i = 0;
+  // while (i < 1000000000) i++;
   // function purpose
   const sum = stories.reduce((cumul, story) => cumul + story.num_comments, 0);
   return sum;
 };
 
 function App() {
-  console.log("B: App");
+  // console.log("B: App");
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
     stories: [],
     isLoading: false,
@@ -72,13 +72,11 @@ function App() {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
   };
 
-  const handleRemoveStory = useCallback((item: Story) => {
+  const handleDismissStory = useCallback((item: Story) => {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
   }, []);
 
   const handleFetchStories = useCallback(async () => {
-    // Now the "disabled" attribute of the search button play this role
-    // if (!url) return;
     dispatchCoStates({ type: STORIES_FETCH_INIT });
     try {
       const result = await axios.get(url);
@@ -114,7 +112,7 @@ function App() {
       {coStates.isLoading ? (
         <h3>Loading ...</h3>
       ) : (
-        <List stories={coStates.stories} onRemove={handleRemoveStory} />
+        <List stories={coStates.stories} onDismissStory={handleDismissStory} />
       )}
     </div>
   );

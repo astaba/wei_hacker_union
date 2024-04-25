@@ -13,7 +13,7 @@ const useLocalStorage = (
       isMounting.current = false;
       return;
     }
-    console.log("A: useLocalStorage: How many times do I run at mounting?");
+    // console.log("A: useLocalStorage: How many times do I run at mounting?");
     localStorage.setItem(key, value);
   }, [key, value]);
 

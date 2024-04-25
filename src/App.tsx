@@ -41,17 +41,11 @@ const storiesReducer = (
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 const getCommentSum = (stories: Story[]): number => {
-  // console.log("C: get comment sum");
-  // Delayer
-  // let i = 0;
-  // while (i < 1000000000) i++;
-  // function purpose
   const sum = stories.reduce((cumul, story) => cumul + story.num_comments, 0);
   return sum;
 };
 
 function App() {
-  // console.log("B: App");
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
     stories: [],
     isLoading: false,
@@ -59,30 +53,25 @@ function App() {
   });
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
   const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
-  // Optimization in place of: const commentSum = getCommentSum(coStates.stories)
-  const commentSum = useMemo(() => {
-    return getCommentSum(coStates.stories);
-  }, [coStates]);
 
-  const handleSearchChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(event.target.value.trim());
-    },
-    [setSearchTerm],
-  );
+  const commentSum = getCommentSum(coStates.stories);
 
-  const handleSearchSubmit = useCallback(() => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value.trim());
+  };
+  const handleSearchSubmit = () => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
-  }, [searchTerm]);
+  };
 
-  const handleDismissStory = useCallback((item: Story) => {
+  const handleDismissStory = (item: Story) => {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
-  }, []);
+  };
 
   const handleFetchStories = useCallback(async () => {
     dispatchCoStates({ type: STORIES_FETCH_INIT });
     try {
       const result = await axios.get(url);
+      console.log(result.data);
       dispatchCoStates({
         type: STORIES_FETCH_SUCCESS,
         payload: result.data.hits,

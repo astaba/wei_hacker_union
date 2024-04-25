@@ -8,9 +8,7 @@ type ListProps = {
   onDismissStory: (item: Story) => void;
 };
 
-// React.memo API memoizes incoming props.
-const List: React.FC<ListProps> = React.memo(({ stories, onDismissStory }) => {
-  // console.log("B: List");
+const List: React.FC<ListProps> = ({ stories, onDismissStory }) => {
   return (
     <ul>
       {stories.map((story) => (
@@ -22,6 +20,6 @@ const List: React.FC<ListProps> = React.memo(({ stories, onDismissStory }) => {
       ))}
     </ul>
   );
-});
+};
 
 export default List;

@@ -8,25 +8,26 @@ type InputWithLabelProps = {
 
 import InputWithLabel from "./InputWithLabel.tsx";
 
-const SearchForm: React.FC<InputWithLabelProps> = React.memo(
-  ({ searchTerm, onSearchChange, onSearchSubmit }) => {
-    console.log("D: SearchForm renders");
+const SearchForm: React.FC<InputWithLabelProps> = ({
+  searchTerm,
+  onSearchChange,
+  onSearchSubmit,
+}) => {
+  return (
+    <form onSubmit={onSearchSubmit}>
+      <InputWithLabel
+        id="search"
+        value={searchTerm}
+        onSearchChange={onSearchChange}
+        isFocused
+      >
+        <strong>Search: </strong>
+      </InputWithLabel>
+      <button type="submit" disabled={!searchTerm}>
+        Submit
+      </button>
+    </form>
+  );
+};
 
-    return (
-      <form onSubmit={onSearchSubmit}>
-        <InputWithLabel
-          id="search"
-          value={searchTerm}
-          onSearchChange={onSearchChange}
-          isFocused
-        >
-          <strong>Search: </strong>
-        </InputWithLabel>
-        <button type="submit" disabled={!searchTerm}>
-          Submit
-        </button>
-      </form>
-    );
-  },
-);
 export default SearchForm;

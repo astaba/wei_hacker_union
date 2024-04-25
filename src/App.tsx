@@ -1,41 +1,18 @@
-import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import React from "react";
 import axios from "axios";
 
 import List from "./components/List.tsx";
-import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import SearchForm from "./components/SearchForm.tsx";
 
-const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
-const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
-const STORIES_FETCH_FAILURE = "STORIES_FETCH_FAILURE";
-const REMOVE_STORY = "REMOVE_STORY";
-
-const storiesReducer = (
-  state: { stories: Story[]; isLoading: boolean; isError: string | boolean },
-  action:
-    | { type: typeof STORIES_FETCH_INIT }
-    | { type: typeof STORIES_FETCH_FAILURE; payload: string }
-    | { type: typeof STORIES_FETCH_SUCCESS; payload: Story[] }
-    | { type: typeof REMOVE_STORY; payload: Story },
-) => {
-  switch (action.type) {
-    case STORIES_FETCH_INIT:
-      return { ...state, isLoading: true, isError: "" };
-    case STORIES_FETCH_FAILURE:
-      return { ...state, isLoading: false, isError: action.payload };
-    case STORIES_FETCH_SUCCESS:
-      return { stories: action.payload, isLoading: false, isError: "" };
-    case REMOVE_STORY:
-      return {
-        ...state,
-        stories: state.stories.filter(
-          (story) => story.objectID !== action.payload.objectID,
-        ),
-      };
-    default:
-      throw new Error("Unexpected case in reducer action type");
-  }
+type AppState = {
+  coStates: {
+    stories: Story[];
+    isLoading: boolean;
+    isError: string | null;
+  };
+  searchTerm: string;
+  url: string;
 };
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
@@ -45,69 +22,107 @@ const getCommentSum = (stories: Story[]): number => {
   return sum;
 };
 
-function App() {
-  const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
-    stories: [],
-    isLoading: false,
-    isError: "",
-  });
-  const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
-  const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
+class App extends React.Component<Record<string, never>, AppState> {
+  constructor(props: Record<string, never>) {
+    super(props);
+    this.state = {
+      coStates: {
+        stories: [],
+        isLoading: false,
+        isError: "",
+      },
+      searchTerm: localStorage.getItem("hackerSearch") || "React",
+      url: "",
+    };
+  }
 
-  const commentSum = getCommentSum(coStates.stories);
+  componentDidMount(): void {
+    this.setState({ url: `${API_ENDPOINT}${this.state.searchTerm}` });
+  }
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value.trim());
-  };
-  const handleSearchSubmit = () => {
-    setUrl(`${API_ENDPOINT}${searchTerm}`);
-  };
+  componentDidUpdate(_prevProps: Record<string, never>, prevState: AppState) {
+    if (prevState.searchTerm !== this.state.searchTerm) {
+      localStorage.setItem("hackerSearch", this.state.searchTerm);
+    }
+    if (prevState.url !== this.state.url) {
+      this.handleFetchStories();
+    }
+  }
 
-  const handleDismissStory = (item: Story) => {
-    dispatchCoStates({ type: REMOVE_STORY, payload: item });
-  };
-
-  const handleFetchStories = useCallback(async () => {
-    dispatchCoStates({ type: STORIES_FETCH_INIT });
+  handleFetchStories = async () => {
+    this.setState({
+      coStates: { ...this.state.coStates, isLoading: true, isError: "" },
+    });
     try {
-      const result = await axios.get(url);
+      const result = await axios.get(this.state.url);
       console.log(result.data);
-      dispatchCoStates({
-        type: STORIES_FETCH_SUCCESS,
-        payload: result.data.hits,
+      this.setState({
+        coStates: { stories: result.data.hits, isLoading: false, isError: "" },
       });
     } catch (error) {
       console.log(error);
-      dispatchCoStates({
-        type: STORIES_FETCH_FAILURE,
-        payload: "Something went wrong while fetching stories!",
+      this.setState({
+        coStates: {
+          ...this.state.coStates,
+          isLoading: false,
+          isError:
+            typeof error === "object" &&
+            "message" in error! &&
+            typeof error.message === "string"
+              ? error.message
+              : "Something went wrong while fetching stories!",
+        },
       });
     }
-  }, [url]);
+  };
 
-  useEffect(() => {
-    handleFetchStories();
-  }, [handleFetchStories]);
+  handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ searchTerm: event.target.value.trim() });
+  };
 
-  return (
-    <div>
-      <h1>
-        My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
-      </h1>
-      <SearchForm
-        onSearchSubmit={handleSearchSubmit}
-        searchTerm={searchTerm}
-        onSearchChange={handleSearchChange}
-      />
-      <hr />
-      {coStates.isError && <h3>{coStates.isError}</h3>}
-      {coStates.isLoading ? (
-        <h3>Loading ...</h3>
-      ) : (
-        <List stories={coStates.stories} onDismissStory={handleDismissStory} />
-      )}
-    </div>
-  );
+  handleSearchSubmit = () => {
+    this.setState({ url: `${API_ENDPOINT}${this.state.searchTerm}` });
+  };
+
+  handleDismissStory = (item: Story) => {
+    const newStories = this.state.coStates.stories.filter(
+      (story) => story.objectID !== item.objectID,
+    );
+    this.setState((prevState) => {
+      return {
+        ...prevState,
+        coStates: { ...prevState.coStates, stories: newStories },
+      };
+    });
+  };
+
+  render() {
+    const { coStates, searchTerm } = this.state;
+    const commentSum = getCommentSum(coStates.stories);
+
+    return (
+      <div>
+        <h1>
+          My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
+        </h1>
+        <SearchForm
+          onSearchSubmit={this.handleSearchSubmit}
+          searchTerm={searchTerm}
+          onSearchChange={this.handleSearchChange}
+        />
+        <hr />
+        {coStates.isError && <h3>{coStates.isError}</h3>}
+        {coStates.isLoading ? (
+          <h3>Loading ...</h3>
+        ) : (
+          <List
+            stories={coStates.stories}
+            onDismissStory={this.handleDismissStory}
+          />
+        )}
+      </div>
+    );
+  }
 }
 
 export default App;

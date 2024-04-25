@@ -7,7 +7,9 @@ type ItemProps = {
   onDismissStory: (item: Story) => void;
 };
 
-const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
+const Item: React.FC<ItemProps> = React.memo(({ story, onDismissStory }) => {
+  console.log(`E: Item ${story.objectID} renders.`);
+
   return (
     <li>
       <span>
@@ -21,6 +23,6 @@ const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
       </button>
     </li>
   );
-};
+});
 
 export default Item;

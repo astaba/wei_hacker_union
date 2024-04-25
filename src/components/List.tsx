@@ -9,15 +9,15 @@ type ListProps = {
 };
 
 // React.memo API memoizes incoming props.
-const List: React.FC<ListProps> = React.memo((props) => {
+const List: React.FC<ListProps> = React.memo(({ stories, onDismissStory }) => {
   // console.log("B: List");
   return (
     <ul>
-      {props.stories.map(({ objectID, ...item }) => (
+      {stories.map((story) => (
         <Item
-          key={objectID}
-          story={{ objectID, ...item }}
-          onDismissStory={props.onDismissStory}
+          key={story.objectID}
+          story={story}
+          onDismissStory={onDismissStory}
         />
       ))}
     </ul>

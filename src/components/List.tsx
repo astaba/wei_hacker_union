@@ -1,19 +1,21 @@
+import React from "react";
+
 import Item from "./Item.tsx";
 import { Story } from "../types/constants.ts";
 
 type ListProps = {
   stories: Story[];
-  onRemove: (item: Story) => void;
+  onDismissStory: (item: Story) => void;
 };
 
-const List: React.FC<ListProps> = (props) => {
+const List: React.FC<ListProps> = ({ stories, onDismissStory }) => {
   return (
     <ul>
-      {props.stories.map(({ objectID, ...item }) => (
+      {stories.map((story) => (
         <Item
-          key={objectID}
-          story={{ objectID, ...item }}
-          onRemove={props.onRemove}
+          key={story.objectID}
+          story={story}
+          onDismissStory={onDismissStory}
         />
       ))}
     </ul>

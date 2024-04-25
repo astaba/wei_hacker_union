@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import axios from "axios";
 
 import List from "./components/List.tsx";
@@ -40,6 +40,11 @@ const storiesReducer = (
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
+const getCommentSum = (stories: Story[]): number => {
+  const sum = stories.reduce((cumul, story) => cumul + story.num_comments, 0);
+  return sum;
+};
+
 function App() {
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
     stories: [],
@@ -49,24 +54,24 @@ function App() {
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
   const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
 
+  const commentSum = getCommentSum(coStates.stories);
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value.trim());
   };
-
   const handleSearchSubmit = () => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
   };
 
-  const handleRemoveStory = (item: Story) => {
+  const handleDismissStory = (item: Story) => {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
   };
 
   const handleFetchStories = useCallback(async () => {
-    // Now the "disabled" attribute of the search button play this role
-    // if (!url) return;
     dispatchCoStates({ type: STORIES_FETCH_INIT });
     try {
       const result = await axios.get(url);
+      console.log(result.data);
       dispatchCoStates({
         type: STORIES_FETCH_SUCCESS,
         payload: result.data.hits,
@@ -86,7 +91,9 @@ function App() {
 
   return (
     <div>
-      <h1>My hacker stories</h1>
+      <h1>
+        My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
+      </h1>
       <SearchForm
         onSearchSubmit={handleSearchSubmit}
         searchTerm={searchTerm}
@@ -97,7 +104,7 @@ function App() {
       {coStates.isLoading ? (
         <h3>Loading ...</h3>
       ) : (
-        <List stories={coStates.stories} onRemove={handleRemoveStory} />
+        <List stories={coStates.stories} onDismissStory={handleDismissStory} />
       )}
     </div>
   );

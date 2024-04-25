@@ -29,4 +29,5 @@ const SearchForm: React.FC<InputWithLabelProps> = ({
     </form>
   );
 };
+
 export default SearchForm;

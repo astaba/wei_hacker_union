@@ -24,13 +24,17 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
 
   return (
     <>
-      <label htmlFor={id}>{children}</label>&nbsp;
+      <label htmlFor={id} className={"label"}>
+        {children}
+      </label>
+      &nbsp;
       <input
         id={id}
         type={type}
         value={value}
         onChange={onSearchChange}
         ref={inputRef}
+        className={"input"}
       />
     </>
   );

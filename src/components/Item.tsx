@@ -9,16 +9,22 @@ type ItemProps = {
 
 const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
   return (
-    <li>
-      <span>
+    <li className={"item"}>
+      <span style={{ width: "40%" }}>
         <a href={story.url}>{story.title}</a>
       </span>
-      <span>{story.author}</span>
-      <span>{story.num_comments}</span>
-      <span>{story.points}</span>
-      <button type="button" onClick={() => onDismissStory(story)}>
-        Dismiss
-      </button>
+      <span style={{ width: "30%" }}>{story.author}</span>
+      <span style={{ width: "10%" }}>{story.num_comments}</span>
+      <span style={{ width: "10%" }}>{story.points}</span>
+      <span style={{ width: "10%" }}>
+        <button
+          type="button"
+          onClick={() => onDismissStory(story)}
+          className={"button button_small"}
+        >
+          Dismiss
+        </button>
+      </span>
     </li>
   );
 };

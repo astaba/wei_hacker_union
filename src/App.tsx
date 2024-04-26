@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import axios from "axios";
 
 import List from "./components/List.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import SearchForm from "./components/SearchForm.tsx";
+import "./App.css";
 
 const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
 const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
@@ -90,8 +91,8 @@ function App() {
   }, [handleFetchStories]);
 
   return (
-    <div>
-      <h1>
+    <div className={"container"}>
+      <h1 className={"headline-primary"}>
         My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
       </h1>
       <SearchForm

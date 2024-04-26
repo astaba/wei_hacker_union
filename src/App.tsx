@@ -4,6 +4,7 @@ import axios from "axios";
 import List from "./components/List.tsx";
 import { Story } from "./types/constants.ts";
 import SearchForm from "./components/SearchForm.tsx";
+import withLocalStorage from "./reusable-HOC/withLocalStorage.tsx";
 
 type AppState = {
   coStates: {
@@ -11,9 +12,13 @@ type AppState = {
     isLoading: boolean;
     isError: string | null;
   };
-  searchTerm: string;
   url: string;
 };
+
+interface AppProps {
+  storageValue: string;
+  setStorageValue: (value: string) => void;
+}
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
@@ -22,8 +27,8 @@ const getCommentSum = (stories: Story[]): number => {
   return sum;
 };
 
-class App extends React.Component<Record<string, never>, AppState> {
-  constructor(props: Record<string, never>) {
+class _App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
     super(props);
     this.state = {
       coStates: {
@@ -31,18 +36,17 @@ class App extends React.Component<Record<string, never>, AppState> {
         isLoading: false,
         isError: "",
       },
-      searchTerm: localStorage.getItem("hackerSearch") || "React",
       url: "",
     };
   }
 
   componentDidMount(): void {
-    this.setState({ url: `${API_ENDPOINT}${this.state.searchTerm}` });
+    this.setState({ url: `${API_ENDPOINT}${this.props.storageValue}` });
   }
 
-  componentDidUpdate(_prevProps: Record<string, never>, prevState: AppState) {
-    if (prevState.searchTerm !== this.state.searchTerm) {
-      localStorage.setItem("hackerSearch", this.state.searchTerm);
+  componentDidUpdate(prevProps: AppProps, prevState: AppState) {
+    if (prevProps.storageValue !== this.props.storageValue) {
+      localStorage.setItem("hackerSearch", this.props.storageValue);
     }
     if (prevState.url !== this.state.url) {
       this.handleFetchStories();
@@ -77,11 +81,11 @@ class App extends React.Component<Record<string, never>, AppState> {
   };
 
   handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: event.target.value.trim() });
+    this.props.setStorageValue(event.target.value);
   };
 
   handleSearchSubmit = () => {
-    this.setState({ url: `${API_ENDPOINT}${this.state.searchTerm}` });
+    this.setState({ url: `${API_ENDPOINT}${this.props.storageValue}` });
   };
 
   handleDismissStory = (item: Story) => {
@@ -97,7 +101,7 @@ class App extends React.Component<Record<string, never>, AppState> {
   };
 
   render() {
-    const { coStates, searchTerm } = this.state;
+    const { coStates } = this.state;
     const commentSum = getCommentSum(coStates.stories);
 
     return (
@@ -107,7 +111,7 @@ class App extends React.Component<Record<string, never>, AppState> {
         </h1>
         <SearchForm
           onSearchSubmit={this.handleSearchSubmit}
-          searchTerm={searchTerm}
+          searchTerm={this.props.storageValue}
           onSearchChange={this.handleSearchChange}
         />
         <hr />
@@ -124,5 +128,10 @@ class App extends React.Component<Record<string, never>, AppState> {
     );
   }
 }
+
+const App = withLocalStorage(_App, {
+  defaultValue: "React",
+  storageKey: "hackerSearch",
+});
 
 export default App;

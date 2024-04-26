@@ -44,7 +44,10 @@
 }
 
 .button_small {
-  padding: 5px;
+  padding: 2px;
+  border: none;
+  border-radius: 3px;
+  line-height: 0;
 }
 
 .button_large {

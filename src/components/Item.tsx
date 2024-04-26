@@ -1,6 +1,9 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import React from "react";
 
 import { Story } from "../types/constants.ts";
+import SquareCheckBig from "../assets/square-check-big.svg?react";
 
 type ItemProps = {
   story: Story;
@@ -21,8 +24,9 @@ const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
           type="button"
           onClick={() => onDismissStory(story)}
           className={"button button_small"}
+          aria-label="dismiss"
         >
-          Dismiss
+          <SquareCheckBig width={"24"} height={"24"} />
         </button>
       </span>
     </li>

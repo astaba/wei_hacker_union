@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import stylex from "@stylexjs/stylex";
 
 type InputWithLaebelProps = {
   id: string;
@@ -24,7 +25,7 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
 
   return (
     <>
-      <label htmlFor={id} className={"label"}>
+      <label htmlFor={id} {...stylex.props(styles.label)}>
         {children}
       </label>
       &nbsp;
@@ -34,10 +35,27 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
         value={value}
         onChange={onSearchChange}
         ref={inputRef}
-        className={"input"}
+        {...stylex.props(styles.input)}
       />
     </>
   );
 };
 
 export default InputWithLabel;
+
+const styles = stylex.create({
+  label: {
+    borderBottom: "1px solid #171212",
+    borderLeft: "1px solid #171212",
+    borderBottomLeftRadius: "3px",
+    paddingLeft: "5px",
+    fontSize: "24px",
+  },
+  input: {
+    border: "none",
+    paddingBottom: "4px",
+    borderBottom: "1px solid #171212",
+    backgroundColor: "transparent",
+    fontSize: "24px",
+  },
+});

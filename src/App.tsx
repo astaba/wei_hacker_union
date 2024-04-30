@@ -1,12 +1,12 @@
 import React from "react";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import axios from "axios";
+import stylex from "@stylexjs/stylex";
 
 import List from "./components/List.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import SearchForm from "./components/SearchForm.tsx";
-import "./App.css";
 
 const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
 const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
@@ -96,8 +96,8 @@ function App() {
   }, [handleFetchStories]);
 
   return (
-    <div className={"container"}>
-      <h1 className={"headline-primary"}>
+    <div {...stylex.props(styles.container)}>
+      <h1 {...stylex.props(styles.headline_primary)}>
         My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
       </h1>
       <SearchForm
@@ -117,3 +117,20 @@ function App() {
 }
 
 export default App;
+
+const styles = stylex.create({
+  container: {
+    minHeight: "100vh",
+    padding: "20px",
+    background: stylex.firstThatWorks(
+      "linear-gradient(to left, #b6fbff, #83a4d4)",
+      "#83a4d4",
+    ),
+    color: "#171212",
+  },
+  headline_primary: {
+    fontSize: "48px",
+    fontWeight: "300",
+    letterSpacing: "2px",
+  },
+});

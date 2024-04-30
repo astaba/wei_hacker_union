@@ -43,7 +43,11 @@ const storiesReducer = (
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 const getCommentSum = (stories: Story[]): number => {
-  const sum = stories.reduce((cumul, story) => cumul + story.num_comments, 0);
+  const sum = stories.reduce((cumul, story) => {
+    const num_comments = story.num_comments ? story.num_comments : 0;
+    //console.log(num_comments);
+    return cumul + num_comments;
+  }, 0);
   return sum;
 };
 

@@ -5,6 +5,8 @@ import React from "react";
 import { Story } from "../types/constants.ts";
 import Button from "./Button.tsx";
 import SquareCheckBig from "../assets/square-check-big.svg?react";
+import itemStyles from "./Item.module.css";
+import btnStyles from "./Button.module.css";
 
 type ItemProps = {
   story: Story;
@@ -13,7 +15,7 @@ type ItemProps = {
 
 const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
   return (
-    <li className={"item"}>
+    <li className={itemStyles.item}>
       <span style={{ width: "40%" }}>
         <a href={story.url}>{story.title}</a>
       </span>
@@ -24,7 +26,7 @@ const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
         <Button
           type="button"
           onClick={() => onDismissStory(story)}
-          btnClasses={"button_small"}
+          btnClasses={btnStyles.button_small}
           aria-label="dismiss"
         >
           <SquareCheckBig width={"24"} height={"24"} />

@@ -1,5 +1,7 @@
 import React from "react";
 
+import styles from "./Button.module.css";
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   btnClasses: string;
 }
@@ -10,7 +12,7 @@ const Button: React.FC<ButtonProps> = ({
   btnClasses,
   children,
 }) => {
-  const classes = btnClasses ? `button ${btnClasses}` : "button";
+  const classes = btnClasses ? `${styles.button} ${btnClasses}` : styles.button;
 
   return (
     <button type={type} onClick={onClick} className={classes}>

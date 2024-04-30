@@ -1,0 +1,31 @@
+.button {
+  --pad: 0.25em;
+  background: transparent;
+  border: 1px solid #171212;
+  border-radius: 3px;
+  padding-inline:var(--pad-inl, calc(var(--pad) * 2.5));
+  padding-block: var(--pad-blo, calc(var(--pad) * 1));
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+}
+
+.button:hover {
+  background: #171212;
+  color: #ffffff;
+}
+
+.button_small {
+  --pad-inl: var(--pad);
+  border: none;
+  line-height: 0;
+}
+
+.button_large {
+  --pad: 0.5em;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+

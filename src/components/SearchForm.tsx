@@ -1,12 +1,13 @@
 import React from "react";
 
+import InputWithLabel from "./InputWithLabel.tsx";
+import Button from "./Button.tsx";
+
 type InputWithLabelProps = {
   searchTerm: string;
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSearchSubmit: () => void;
 };
-
-import InputWithLabel from "./InputWithLabel.tsx";
 
 const SearchForm: React.FC<InputWithLabelProps> = ({
   searchTerm,
@@ -23,13 +24,9 @@ const SearchForm: React.FC<InputWithLabelProps> = ({
       >
         <strong>Search: </strong>
       </InputWithLabel>
-      <button
-        type="submit"
-        disabled={!searchTerm}
-        className={"button button_large"}
-      >
+      <Button type="submit" disabled={!searchTerm} btnClasses={"button_large"}>
         Submit
-      </button>
+      </Button>
     </form>
   );
 };

@@ -3,6 +3,7 @@
 import React from "react";
 
 import { Story } from "../types/constants.ts";
+import Button from "./Button.tsx";
 import SquareCheckBig from "../assets/square-check-big.svg?react";
 
 type ItemProps = {
@@ -20,14 +21,14 @@ const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
       <span style={{ width: "10%" }}>{story.num_comments}</span>
       <span style={{ width: "10%" }}>{story.points}</span>
       <span style={{ width: "10%" }}>
-        <button
+        <Button
           type="button"
           onClick={() => onDismissStory(story)}
-          className={"button button_small"}
+          btnClasses={"button_small"}
           aria-label="dismiss"
         >
           <SquareCheckBig width={"24"} height={"24"} />
-        </button>
+        </Button>
       </span>
     </li>
   );

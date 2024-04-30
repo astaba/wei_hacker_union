@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
 
 type InputWithLaebelProps = {
   id: string;
@@ -24,11 +25,11 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
 
   return (
     <>
-      <label htmlFor={id} className={"label"}>
+      <StyledLabel htmlFor={id} className={"label"}>
         {children}
-      </label>
+      </StyledLabel>
       &nbsp;
-      <input
+      <StyledInput
         id={id}
         type={type}
         value={value}
@@ -41,3 +42,19 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
 };
 
 export default InputWithLabel;
+
+const StyledLabel = styled.label`
+  border-bottom: 1px solid #171212;
+  border-left: 1px solid #171212;
+  border-bottom-left-radius: 3px;
+  padding-left: 5px;
+  font-size: 24px;
+`;
+
+const StyledInput = styled.input`
+  border: none;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #171212;
+  background-color: transparent;
+  font-size: 24px;
+`;

@@ -1,12 +1,13 @@
 import React from "react";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import axios from "axios";
+import styled from "styled-components";
 
 import List from "./components/List.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import SearchForm from "./components/SearchForm.tsx";
-import "./App.css";
+//import "./App.css";
 
 const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
 const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
@@ -43,7 +44,11 @@ const storiesReducer = (
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 const getCommentSum = (stories: Story[]): number => {
-  const sum = stories.reduce((cumul, story) => cumul + story.num_comments, 0);
+  const sum = stories.reduce((cumul, story) => {
+    const num_comments = story.num_comments ? story.num_comments : 0;
+    //console.log(num_comments);
+    return cumul + num_comments;
+  }, 0);
   return sum;
 };
 
@@ -92,10 +97,10 @@ function App() {
   }, [handleFetchStories]);
 
   return (
-    <div className={"container"}>
-      <h1 className={"headline-primary"}>
+    <StyledContainer className={"container"}>
+      <StyledHeadline className={"headline-primary"}>
         My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
-      </h1>
+      </StyledHeadline>
       <SearchForm
         onSearchSubmit={handleSearchSubmit}
         searchTerm={searchTerm}
@@ -108,8 +113,22 @@ function App() {
       ) : (
         <List stories={coStates.stories} onDismissStory={handleDismissStory} />
       )}
-    </div>
+    </StyledContainer>
   );
 }
 
 export default App;
+
+const StyledContainer = styled.div`
+  min-height: 100vh;
+  padding: 20px;
+  background: #83a4d4; /* fallback for old browsers */
+  background: linear-gradient(to left, #b6fbff, #83a4d4);
+  color: #171212;
+`;
+
+const StyledHeadline = styled.h1`
+  font-size: 48px;
+  font-weight: 300;
+  letter-spacing: 2px;
+`;

@@ -95,8 +95,8 @@ function App() {
   }, [handleFetchStories]);
 
   return (
-    <div className={"container"}>
-      <h1 className={"headline-primary"}>
+    <div className="flex min-h-screen flex-col bg-[#83A4D4] bg-gradient-to-l from-[#B6FBFF] to-[#83A4D4] px-8 py-12 text-[#171212]">
+      <h1 className="text-center text-5xl font-light tracking-wide mb-6">
         My hacker stories{commentSum ? ` with ${commentSum} comments` : ""}
       </h1>
       <SearchForm

@@ -23,20 +23,22 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
   }, [isFocused]);
 
   return (
-    <>
-      <label htmlFor={id} className={"label"}>
+    <div className="text-2xl px-3 py-1 border-b border-l border-solid border-[#171212] rounded-es">
+      <label
+        htmlFor={id}
+        className="text-2xl"
+      >
         {children}
       </label>
-      &nbsp;
       <input
         id={id}
         type={type}
         value={value}
         onChange={onSearchChange}
         ref={inputRef}
-        className={"input"}
+        className={"bg-transparent p-1"}
       />
-    </>
+    </div>
   );
 };
 

@@ -30,14 +30,17 @@ const sorters: Sorters = {
 };
 
 const List: React.FC<ListProps> = ({ stories, onDismissStory }) => {
-  const [sort, setSort] = React.useState("NONE");
+  const [sort, setSort] = React.useState({ sortKey: "NONE", isReverse: false });
 
   const handleSort = (sortKey: string) => {
-    setSort(sortKey);
+    const isReverse = sortKey === sort.sortKey && !sort.isReverse;
+    setSort({ sortKey, isReverse });
   };
 
-  const sortFunction = sorters[sort];
-  const sortedStories = sortFunction(stories);
+  const sortFunction = sorters[sort.sortKey];
+  const sortedStories = sort.isReverse
+    ? sortFunction(stories).reverse()
+    : sortFunction(stories);
 
   return (
     <ul>

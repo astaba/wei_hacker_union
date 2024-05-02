@@ -5,3 +5,7 @@
 .column {
   @apply whitespace-nowrap overflow-hidden text-ellipsis;
 }
+
+.listTitle {
+  @apply overflow-hidden font-bold text-nowrap text-ellipsis p-1;
+}

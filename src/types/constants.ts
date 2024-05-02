@@ -6,3 +6,13 @@ export type Story = {
   points: number;
   objectID: number;
 };
+
+interface ColumnDetails {
+  label: string;
+  sortkey: string;
+  width: string;
+}
+
+export interface Columns {
+  [key: string]: ColumnDetails;
+}

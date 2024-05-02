@@ -2,27 +2,34 @@
 
 import React from "react";
 
-import { Story } from "../types/constants.ts";
+import { Story, Columns } from "../types/constants.ts";
 import Button from "./Button.tsx";
 import SquareCheckBig from "../assets/square-check-big.svg?react";
 
 type ItemProps = {
   story: Story;
   onDismissStory: (item: Story) => void;
+  columns: Columns;
 };
 
-const Item: React.FC<ItemProps> = ({ story, onDismissStory }) => {
+const Item: React.FC<ItemProps> = ({ story, onDismissStory, columns }) => {
   return (
     <li className={"flex items-center my-1.5 *:px-1"}>
-      <span className={"column w-5/12"}>
+      <span className={`column ${columns.title.width}`}>
         <a href={story.url} className="text-inherit hover:underline">
           {story.title}
         </a>
       </span>
-      <span className={"column w-3/12"}>{story.author}</span>
-      <span className={"column w-1/12"}>{story.num_comments}</span>
-      <span className={"column w-1/12"}>{story.points}</span>
-      <span className={"column inline-flex justify-center w-2/12"}>
+      <span className={`column ${columns.author.width}`}>{story.author}</span>
+      <span className={`column text-right ${columns.num_comments.width}`}>
+        {story.num_comments}
+      </span>
+      <span className={`column text-right ${columns.points.width}`}>
+        {story.points}
+      </span>
+      <span
+        className={`column inline-flex justify-center ${columns.action.width} `}
+      >
         <Button
           type="button"
           onClick={() => onDismissStory(story)}

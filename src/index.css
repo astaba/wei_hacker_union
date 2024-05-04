@@ -3,9 +3,26 @@
 @tailwind utilities;
 
 .column {
-  @apply whitespace-nowrap overflow-hidden text-ellipsis;
+  @apply overflow-hidden text-ellipsis whitespace-nowrap;
 }
 
-.listTitle {
-  @apply overflow-hidden font-bold text-nowrap text-ellipsis p-1;
+.ulHeadItem {
+  @apply overflow-hidden text-ellipsis text-nowrap p-1 font-bold;
 }
+
+.btn {
+  @apply overflow-hidden rounded-[3px] border border-solid border-[#171212] transition-all hover:bg-[#171212] hover:text-white;
+}
+
+.btn-large {
+  @apply px-3.5 py-1 font-bold tracking-wider;
+}
+
+.btn-small {
+  @apply px-2.5 py-1;
+}
+
+.btn-svg {
+  @apply border-none p-0.5 leading-none;
+}
+

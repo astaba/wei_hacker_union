@@ -17,7 +17,7 @@ const SearchForm: React.FC<InputWithLabelProps> = ({
   return (
     <form
       onSubmit={onSearchSubmit}
-      className="flex flex-col items-baseline gap-5 mx-auto mb-6 sm:flex-row"
+      className="mx-auto mb-6 flex flex-col items-baseline gap-5 sm:flex-row"
     >
       <InputWithLabel
         id="search"
@@ -30,7 +30,7 @@ const SearchForm: React.FC<InputWithLabelProps> = ({
       <Button
         type="submit"
         disabled={!searchTerm}
-        btnClasses={"tracking-[1px] font-bold px-3.5 py-1"}
+        btnClasses="btn-large"
       >
         Submit
       </Button>

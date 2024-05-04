@@ -23,7 +23,7 @@ const InputWithLabel: React.FC<InputWithLaebelProps> = ({
   }, [isFocused]);
 
   return (
-    <div className="text-2xl px-3 py-1 border-b border-l border-solid border-[#171212] rounded-es">
+    <div className="rounded-es border-b border-l border-solid border-[#171212] px-3 py-1 text-2xl">
       <label
         htmlFor={id}
         className="text-2xl"

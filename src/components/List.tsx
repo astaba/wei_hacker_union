@@ -3,6 +3,7 @@ import { sortBy } from "lodash";
 
 import Item from "./Item.tsx";
 import { Story, Columns } from "../types/constants.ts";
+import ColumnHeader from "./ColumnHeader.tsx";
 
 type ListProps = {
   stories: Story[];
@@ -30,14 +31,17 @@ const sorters: Sorters = {
 };
 
 const List: React.FC<ListProps> = ({ stories, onDismissStory }) => {
-  const [sort, setSort] = React.useState({ sortKey: "NONE", isReverse: false });
+  const [sort, setSort] = React.useState({
+    sortingKey: "NONE",
+    isReverse: false,
+  });
 
   const handleSort = (sortKey: string) => {
-    const isReverse = sortKey === sort.sortKey && !sort.isReverse;
-    setSort({ sortKey, isReverse });
+    const isReverse = sortKey === sort.sortingKey && !sort.isReverse;
+    setSort({ sortingKey: sortKey, isReverse });
   };
 
-  const sortFunction = sorters[sort.sortKey];
+  const sortFunction = sorters[sort.sortingKey];
   const sortedStories = sort.isReverse
     ? sortFunction(stories).reverse()
     : sortFunction(stories);
@@ -46,19 +50,12 @@ const List: React.FC<ListProps> = ({ stories, onDismissStory }) => {
     <ul>
       <li className={"flex"}>
         {Object.keys(columns).map((column) => (
-          <span
+          <ColumnHeader
             key={columns[column].sortkey}
-            className={`listTitle ${columns[column].width}`}
-          >
-            {columns[column].sortkey ? (
-              <button
-                type="button"
-                onClick={() => handleSort(columns[column].sortkey)}
-              >
-                {columns[column].label}
-              </button>
-            ) : undefined}
-          </span>
+            column={columns[column]}
+            onSort={handleSort}
+            sort={sort}
+          />
         ))}
       </li>
       {sortedStories.map((story) => (

@@ -7,7 +7,7 @@ export type Story = {
   objectID: number;
 };
 
-interface ColumnDetails {
+export interface ColumnDetails {
   label: string;
   sortkey: string;
   width: string;

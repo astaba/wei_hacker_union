@@ -64,8 +64,11 @@ function App() {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value.trim());
   };
-  const handleSearchSubmit = () => {
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
+
+    event.preventDefault();
   };
 
   const handleDismissStory = (item: Story) => {

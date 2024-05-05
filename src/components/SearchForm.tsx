@@ -6,7 +6,7 @@ import Button from "./Button.tsx";
 type InputWithLabelProps = {
   searchTerm: string;
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearchSubmit: () => void;
+  onSearchSubmit: (evnt: React.FormEvent<HTMLFormElement>) => void;
 };
 
 const SearchForm: React.FC<InputWithLabelProps> = ({
@@ -16,7 +16,7 @@ const SearchForm: React.FC<InputWithLabelProps> = ({
 }) => {
   return (
     <form
-      onSubmit={onSearchSubmit}
+      onSubmit={(event) => onSearchSubmit(event)}
       className="mx-auto mb-6 flex flex-col items-baseline gap-5 sm:flex-row"
     >
       <InputWithLabel

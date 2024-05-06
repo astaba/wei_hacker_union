@@ -6,6 +6,7 @@ import List from "./components/List.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import SearchForm from "./components/SearchForm.tsx";
+import Button from "./components/Button.tsx";
 
 const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
 const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
@@ -50,6 +51,20 @@ const getCommentSum = (stories: Story[]): number => {
   return sum;
 };
 
+const getUrl = (searchTerm: string) => `${API_ENDPOINT}${searchTerm}`;
+const extractSearchTerm = (url: string) => url.replace(API_ENDPOINT, "");
+const getLastSearches = (urls: string[]) => {
+  return urls
+    .reduce<string[]>((cumul, url, index) => {
+      const searchTerm = extractSearchTerm(url);
+      if (index === 0) return cumul.concat(searchTerm);
+      const prevConcat = cumul[cumul.length - 1];
+      if (searchTerm === prevConcat) return cumul;
+      else return cumul.concat(searchTerm);
+    }, [])
+    .slice(-6, -1);
+};
+
 function App() {
   const [coStates, dispatchCoStates] = useReducer(storiesReducer, {
     stories: [],
@@ -57,7 +72,7 @@ function App() {
     isError: "",
   });
   const [searchTerm, setSearchTerm] = useLocalStorage("hackerSearch", "React");
-  const [url, setUrl] = useState(`${API_ENDPOINT}${searchTerm}`);
+  const [urls, setUrls] = useState([getUrl(searchTerm)]);
 
   const commentSum = getCommentSum(coStates.stories);
 
@@ -65,9 +80,12 @@ function App() {
     setSearchTerm(event.target.value.trim());
   };
 
+  const updateUrl = (searchTerm: string) => {
+    const newUrl = getUrl(searchTerm);
+    setUrls(urls.concat(newUrl));
+  };
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    setUrl(`${API_ENDPOINT}${searchTerm}`);
-
+    updateUrl(searchTerm);
     event.preventDefault();
   };
 
@@ -75,10 +93,18 @@ function App() {
     dispatchCoStates({ type: REMOVE_STORY, payload: item });
   };
 
+  const handleLastSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+    updateUrl(searchTerm);
+  };
+
+  const lastSearches = getLastSearches(urls);
+
   const handleFetchStories = useCallback(async () => {
     dispatchCoStates({ type: STORIES_FETCH_INIT });
     try {
-      const result = await axios.get(url);
+      const lastUrl = urls[urls.length - 1];
+      const result = await axios.get(lastUrl);
       console.log(result.data);
       dispatchCoStates({
         type: STORIES_FETCH_SUCCESS,
@@ -91,7 +117,7 @@ function App() {
         payload: "Something went wrong while fetching stories!",
       });
     }
-  }, [url]);
+  }, [urls]);
 
   useEffect(() => {
     handleFetchStories();
@@ -107,6 +133,20 @@ function App() {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
       />
+      <div className="mb-2">
+        <h2 className="mb-2 text-2xl tracking-wide">Last searches:</h2>
+        <span className="inline-flex gap-2">
+          {lastSearches.map((searchTerm, index) => (
+            <Button
+              key={searchTerm + index}
+              onClick={() => handleLastSearch(searchTerm)}
+              btnClasses="btn-small"
+            >
+              {searchTerm}
+            </Button>
+          ))}
+        </span>
+      </div>
       <hr />
       {coStates.isError && <h3>{coStates.isError}</h3>}
       {coStates.isLoading ? (

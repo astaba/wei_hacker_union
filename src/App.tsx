@@ -6,7 +6,7 @@ import List from "./components/List.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.tsx";
 import { Story } from "./types/constants.ts";
 import SearchForm from "./components/SearchForm.tsx";
-import Button from "./components/Button.tsx";
+import LastSearches from "./components/LastSearches.tsx";
 
 const STORIES_FETCH_INIT = "STORIES_FETCH_INIT";
 const STORIES_FETCH_SUCCESS = "STORIES_FETCH_SUCCESS";
@@ -133,20 +133,10 @@ function App() {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
       />
-      <div className="mb-2">
-        <h2 className="mb-2 text-2xl tracking-wide">Last searches:</h2>
-        <span className="inline-flex gap-2">
-          {lastSearches.map((searchTerm, index) => (
-            <Button
-              key={searchTerm + index}
-              onClick={() => handleLastSearch(searchTerm)}
-              btnClasses="btn-small"
-            >
-              {searchTerm}
-            </Button>
-          ))}
-        </span>
-      </div>
+      <LastSearches
+        lastSearches={lastSearches}
+        onLastSearch={handleLastSearch}
+      />
       <hr />
       {coStates.isError && <h3>{coStates.isError}</h3>}
       {coStates.isLoading ? (

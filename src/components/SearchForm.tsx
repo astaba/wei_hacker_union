@@ -30,7 +30,7 @@ const SearchForm: React.FC<InputWithLabelProps> = ({
       <Button
         type="submit"
         disabled={!searchTerm}
-        btnClasses="btn-large"
+        className="btn-large"
       >
         Submit
       </Button>

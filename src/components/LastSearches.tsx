@@ -19,7 +19,7 @@ const LastSearches: React.FC<LastSearchesProps> = ({
           <Button
             key={searchTerm + index}
             onClick={() => onLastSearch(searchTerm)}
-            btnClasses="btn-small"
+            className="btn-small"
           >
             {searchTerm}
           </Button>

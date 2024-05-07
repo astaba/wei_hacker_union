@@ -24,7 +24,7 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = ({
         <Button
           type="button"
           onClick={() => onSort(column.sortkey)}
-          btnClasses="btn-col"
+          className="btn-col"
         >
           {column.label}
           <ChevronDown

@@ -33,7 +33,7 @@ const Item: React.FC<ItemProps> = ({ story, onDismissStory, columns }) => {
         <Button
           type="button"
           onClick={() => onDismissStory(story)}
-          btnClasses="btn-svg"
+          className="btn-svg"
           aria-label="dismiss"
         >
           <SquareCheckBig width={"24"} height={"24"} />

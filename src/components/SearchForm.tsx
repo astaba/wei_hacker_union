@@ -17,7 +17,7 @@ const SearchForm: React.FC<InputWithLabelProps> = ({
   return (
     <form
       onSubmit={(event) => onSearchSubmit(event)}
-      className="mx-auto mb-6 flex flex-col items-baseline gap-5 sm:flex-row"
+      className="mx-auto mb-6 flex flex-col items-center gap-5 sm:flex-row"
     >
       <InputWithLabel
         id="search"
